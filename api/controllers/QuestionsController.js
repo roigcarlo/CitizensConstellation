@@ -9,8 +9,8 @@
 	 'Quin es el significat de la vida?',
 	 'A que huelen las nubes?',
 	 'Si tienes 0 caramelos y los repartes entre 0 amigos, cuantos caramelos le quedan a cada amigo?',
-	 '0001 1000 1010 0010 0011 1101 1100 1001 0010 1100 0101 0010 111?',
-	 'Why would we we stand when we fall?',
+	 '01000111 01110101 01100001 01101110 01111001 01100001 01110010 01100001 00100000 01100101 01101100?',
+	 'Why would we stand when we will fall?',
 	 'This is the question to the univers, to the stars, to everything?'
  ]
 

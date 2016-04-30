@@ -42,7 +42,7 @@
     </div>
 
     <img id="star1" src="images/star2.png" style="display:none;">
-    <img id="nebula" src="images/nebula1.jpg" style="display:none;">
+    <img id="nebula" src="images/nebula3.jpg" style="display:none;">
 
 
     <!-- Bootstrap core JavaScript
@@ -58,7 +58,7 @@
 
     <script>
       // Get context and initialize
-      var MAX_ELEMENTS = 250;
+      var MAX_ELEMENTS = 100;
       var BRIGHT_INC   = 0.05;
       var MAX_BRIGHT   = 0.1;
 
@@ -93,11 +93,11 @@
         var w = $(this).width()
         var h = $(this).height()
         var offset = $(this).offset()
-        for(var i = 0; i < 10; i++) {
+        for(var i = 0; i < 50; i++) {
           sMove.push({
             x: rnd(offset.left,offset.left+w),
             y: rnd(offset.top,offset.top+h),
-            a: rnd(5,10),
+            a: rnd(8,14),
             s: rnd(1,2)
           })
         }
@@ -135,13 +135,15 @@
         var img = document.getElementById("star1");
 
         for(var s in sElem) {
-          sElem[s].b += sElem[s].m/1000
+          sElem[s].b += sElem[s].m/3000
 
           var alpha = Math.abs(Math.cos(sElem[s].b))
-          var size = 3 * sElem[s].s
+          var size = 6 * sElem[s].s
 
           ctx.globalAlpha = alpha
+          ctx.globalCompositeOperation = "luminosity";
           ctx.drawImage(img,sElem[s].x,sElem[s].y,size,size);
+          ctx.globalCompositeOperation = "source-over";
           ctx.globalAlpha = 1
 
           if(alpha < 0.05) {
@@ -158,10 +160,13 @@
 
           var size = 38
 
-          sMove[s].s += sMove[s].a/10
+          // sMove[s].s += sMove[s].a/10
+          sMove[s].s *= (1.0 + sMove[s].a/100)
           sMove[s].y -= sMove[s].s
 
+          ctx.globalCompositeOperation = "luminosity";
           ctx.drawImage(img,sMove[s].x,sMove[s].y,size,size);
+          ctx.globalCompositeOperation = "source-over";
 
           if(sMove[s].y > -5) {
             sNewMove.push(sMove[s])
