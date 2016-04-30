@@ -1,0 +1,41 @@
+
+body, html { height:100vh; width:100vw; }
+
+.container {
+  margin: 0px;
+  width: 100%;
+  text-align: center;
+}
+
+#hmtlContentContainer {
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  text-align: center;
+}
+
+.questionContainer {
+  padding: 50px;
+}
+
+.questionContainer > .question {
+  padding: 20px;
+  color: white;
+  height: 130px;
+}
+
+.question a {
+  font-family: 'Audiowide', cursive;
+  font-size: 28px;
+  color: white;
+  text-shadow: rgb(0, 0, 0) 0px 0px 10px;
+}
+
+.question a:hover {
+  text-decoration: none;
+}
+
+#starGazer {
+  background-color: #1a2733;
+  position:absolute;
+}

@@ -34,7 +34,7 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  }
+  },
 
   /***************************************************************************
   *                                                                          *
@@ -45,5 +45,15 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
+  '/questions': {
+    controller: 'Questions',
+    action: 'showQuestions'
+  },
+
+  '/getQuestion': {
+    controller: 'Questions',
+    action: 'getQuestion'
+  },
 
 };

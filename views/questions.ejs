@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="ico/favicon.png">
+
+    <title>Astral Questions Birthplace</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
+    <!-- <link href="styles/font-awesome.min.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="styles/main.css" rel="stylesheet"> -->
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <canvas id="starGazer">
+    </canvas>
+
+    <div id="hmtlContentContainer">
+      <div class="col-lg-12">
+        <div class="questionContainer">
+          <div id="question1" class="question"><a class="toTheStars">Patata</a></div>
+          <div id="question2" class="question"><a class="toTheStars">Patata</a></div>
+          <div id="question3" class="question"><a class="toTheStars">Patata</a></div>
+          <div id="question4" class="question"><a class="toTheStars">Patata</a></div>
+          <div id="question5" class="question"><a class="toTheStars">Patata</a></div>
+        </div>
+      </div>
+    </div>
+
+    <img id="star1" src="images/star2.png" style="display:none;">
+    <img id="nebula" src="images/nebula1.jpg" style="display:none;">
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- Mr. Charls comment: post-load remote js is dangerous -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <!-- Bootstrap.js -->
+    <script src="js/bootstrap.min.js"></script>
+
+
+    <script>
+      // Get context and initialize
+      var MAX_ELEMENTS = 250;
+      var BRIGHT_INC   = 0.05;
+      var MAX_BRIGHT   = 0.1;
+
+      var sElem = []
+      var sMove = []
+      var dim
+      var ctx
+
+      var aspectRatio = 1
+
+      var bkgSize = [1366, 786]
+      var bkg = document.getElementById("nebula");
+
+      function refreshQuestion(container) {
+        $.ajax({
+          url: "/getQuestion",
+        })
+        .done(function( data ) {
+          console.log(data, container)
+          container.html(data)
+        });
+      }
+
+      $('.toTheStars').each(function() {
+        refreshQuestion($(this))
+      })
+
+      $('.toTheStars').on('click', function() {
+
+        var me = $(this)
+
+        var w = $(this).width()
+        var h = $(this).height()
+        var offset = $(this).offset()
+        for(var i = 0; i < 10; i++) {
+          sMove.push({
+            x: rnd(offset.left,offset.left+w),
+            y: rnd(offset.top,offset.top+h),
+            a: rnd(5,10),
+            s: rnd(1,2)
+          })
+        }
+
+        me.hide()
+
+        setTimeout(function() {
+          refreshQuestion(me)
+          me.show(2000)
+        }, 500)
+      });
+
+      function rnd(a,b) {
+        return Math.floor(Math.random() * (b-a-1))+a
+      }
+
+      function init() {
+        for(var i = 0; i < MAX_ELEMENTS; i++) {
+          sElem.push({
+            x: rnd(0,dim[0]),
+            y: rnd(0,dim[1]),
+            b: rnd(0,3.1416),
+            m: rnd(5,50),
+            s: rnd(5,10)
+          })
+        }
+      }
+
+      function loop() {
+        ctx.fillStyle = "#1a2733"
+        ctx.fillRect(0,0,dim[0],dim[1])
+
+        ctx.drawImage(bkg,0,0,bkgSize[0],bkgSize[1]*aspectRatio);
+
+        var img = document.getElementById("star1");
+
+        for(var s in sElem) {
+          sElem[s].b += sElem[s].m/1000
+
+          var alpha = Math.abs(Math.cos(sElem[s].b))
+          var size = 3 * sElem[s].s
+
+          ctx.globalAlpha = alpha
+          ctx.drawImage(img,sElem[s].x,sElem[s].y,size,size);
+          ctx.globalAlpha = 1
+
+          if(alpha < 0.05) {
+            sElem[s].x = rnd(0,dim[0])
+            sElem[s].y = rnd(0,dim[1])
+            sElem[s].m = rnd(5,50)
+            sElem[s].s = rnd(5,10)
+          }
+        }
+
+        var sNewMove = []
+
+        for(var s in sMove) {
+
+          var size = 38
+
+          sMove[s].s += sMove[s].a/10
+          sMove[s].y -= sMove[s].s
+
+          ctx.drawImage(img,sMove[s].x,sMove[s].y,size,size);
+
+          if(sMove[s].y > -5) {
+            sNewMove.push(sMove[s])
+          }
+        }
+
+        sMove = sNewMove
+      }
+
+      window.onload = function() {
+        var c = document.getElementById("starGazer")
+        if(c && c.getContext) {
+          ctx = c.getContext("2d")
+
+          ctx.canvas.width = $('#hmtlContentContainer').width()
+          ctx.canvas.height = $('#hmtlContentContainer').height()
+
+          dim = [ctx.canvas.width, ctx.canvas.height]
+          aspectRatio = ctx.canvas.height / bkgSize[1]
+
+          ctx.fillStyle = "#1a2733"
+          ctx.fillRect(0,0,dim[0],dim[1])
+
+          ctx.drawImage(bkg,0,0,bkgSize[0],bkgSize[1]*aspectRatio);
+
+          init();
+          loop();
+
+          setInterval(loop,30);
+        }
+      }
+    </script>
+  </body>
+</html>
